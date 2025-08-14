@@ -7,7 +7,7 @@ type AddPostModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onSave: (postData: Omit<BeachPost, 'id'>) => void;
-  // Para edição, passaremos o posto existente
+  
   editablePost?: BeachPost | null; 
 };
 
@@ -15,13 +15,13 @@ export const AddPostModal: React.FC<AddPostModalProps> = ({ isOpen, onClose, onS
   const [name, setName] = useState('');
   const [order, setOrder] = useState(1);
 
-  // Se estivermos editando, preenche o formulário com os dados do posto
+  
   useEffect(() => {
     if (editablePost) {
       setName(editablePost.name);
       setOrder(editablePost.order);
     } else {
-      // Se for para adicionar, limpa o formulário
+      
       setName('');
       setOrder(1);
     }
@@ -38,7 +38,7 @@ export const AddPostModal: React.FC<AddPostModalProps> = ({ isOpen, onClose, onS
       return;
     }
     onSave({ name, order });
-    onClose(); // Fecha o modal após salvar
+    onClose(); 
   };
 
   return (

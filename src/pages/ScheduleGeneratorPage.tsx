@@ -8,7 +8,6 @@ import {
   type AssignedCompulsoryDaysOff,
   type ReasoningLog,
 } from "../utils/scheduleAlgorithm";
-import Stepper from "../components/ui/Stepper";
 import React from "react";
 import type { SavedSchedule } from "../types/SavedSchedule";
 import LogViewerModal from "../components/modals/LogViewModal";
@@ -75,7 +74,6 @@ export default function ScheduleGeneratorPage() {
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
 
   const [currentStep, setCurrentStep] = useState(1);
-  const steps = ["Configuração", "Folgas", "Vagas", "Resultado"];
 
   useEffect(() => {
     setSavedState({
@@ -327,8 +325,7 @@ export default function ScheduleGeneratorPage() {
     const handleSuggestG2Shifts = () => {
       if (g2Count === 0) return;
 
-      const necessaryWorkDaysForG2 =
-        necessaryShifts - g1Count * g1Shifts;
+      const necessaryWorkDaysForG2 = necessaryShifts - g1Count * g1Shifts;
       let suggestedG2Shifts = Math.ceil(necessaryWorkDaysForG2 / g2Count);
 
       if (suggestedG2Shifts < 0) {
@@ -534,7 +531,9 @@ export default function ScheduleGeneratorPage() {
                       </p>
                       <p className="flex justify-between">
                         <span>Folgas Solicitadas:</span>
-                        <span className="font-bold">{totalRequestedDaysOff}</span>
+                        <span className="font-bold">
+                          {totalRequestedDaysOff}
+                        </span>
                       </p>
                       <p className="flex justify-between font-semibold">
                         <span>Diárias Necessárias:</span>
@@ -849,11 +848,10 @@ export default function ScheduleGeneratorPage() {
                                       cellContent = `XP${
                                         workingPost?.order || "?"
                                       }`;
-                                      bgClass = "bg-yellow-100";
+                                      bgClass = "bg-blue-100";
                                     }
                                   } else if (isCompulsoryOff) {
                                     cellContent = "FC";
-                                    bgClass = "bg-red-100";
                                   } else if (isRequestedOff) {
                                     cellContent = "FS";
                                     bgClass = "bg-red-100";
@@ -869,15 +867,31 @@ export default function ScheduleGeneratorPage() {
                                   );
                                 })}
                                 {(() => {
-                                  const quota = lifeguard.group === "G1" ? g1Shifts : g2Shifts;
-                                  
-                                  const requestedOffCount = Object.keys(requestedDaysOff[lifeguard.id] || {}).filter(date => days.includes(date)).length;
-                                  const maxPossibleWorkDays = days.length - requestedOffCount;
-                                  const targetWorkDays = Math.min(quota, maxPossibleWorkDays);
+                                  const quota =
+                                    lifeguard.group === "G1"
+                                      ? g1Shifts
+                                      : g2Shifts;
 
-                                  const totalBgClass = workCount < targetWorkDays ? "bg-orange-100 text-orange-800" : "bg-gray-100";
+                                  const requestedOffCount = Object.keys(
+                                    requestedDaysOff[lifeguard.id] || {}
+                                  ).filter((date) =>
+                                    days.includes(date)
+                                  ).length;
+                                  const maxPossibleWorkDays =
+                                    days.length - requestedOffCount;
+                                  const targetWorkDays = Math.min(
+                                    quota,
+                                    maxPossibleWorkDays
+                                  );
+
+                                  const totalBgClass =
+                                    workCount < targetWorkDays
+                                      ? "bg-orange-100 text-orange-800"
+                                      : "bg-gray-100";
                                   return (
-                                    <td className={`px-2 sm:px-4 py-2 text-center font-bold ${totalBgClass}`}>
+                                    <td
+                                      className={`px-2 sm:px-4 py-2 text-center font-bold ${totalBgClass}`}
+                                    >
                                       {workCount}
                                     </td>
                                   );
@@ -931,26 +945,28 @@ export default function ScheduleGeneratorPage() {
 
   return (
     <div className="container mx-auto p-4 sm:p-6 md:p-8">
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-6">
-        Gerador de Escala
-      </h1>
-
-      <Stepper steps={steps} currentStep={currentStep} />
-
+      <div className="flex">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+          Gerador de Escala
+        </h1>
+      </div>
       <div className="mt-8 bg-white rounded-lg shadow-md">
         <div className="p-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-gray-200">
-          <Button.Root>
-            <Button.ButtonComponent
-              variant="secondary"
-              onClick={goToPreviousStep}
-              disabled={currentStep === 1}
-            >
-              <Button.Icon icon={FaArrowLeft} />
-              Voltar
-            </Button.ButtonComponent>
-          </Button.Root>
+        
+            <Button.Root>
+              <Button.ButtonComponent
+                variant="secondary"
+                onClick={goToPreviousStep}
+                disabled={currentStep === 1}
+                className={currentStep == 1 ? "text-transparent hover:bg-transparent" : "" }
+              >
+                <Button.Icon icon={FaArrowLeft} />
+                Voltar
+              </Button.ButtonComponent>
+            </Button.Root>
+         
 
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex self-end gap-2 sm:gap-4">
             {currentStep === 1 && (
               <Button.Root>
                 <Button.ButtonComponent onClick={handleClearState}>

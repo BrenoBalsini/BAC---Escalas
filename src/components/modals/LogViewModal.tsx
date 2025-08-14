@@ -24,11 +24,11 @@ const LogViewerModal: React.FC<LogViewerModalProps> = ({ isOpen, onClose, log, l
           </button>
         </div>
         <div className="p-6 overflow-auto">
-          {/* A lógica para renderizar o log virá aqui */}
+          
           <p className="text-gray-600 mb-4">
             Aqui será exibida a tabela detalhada com o status de cada guarda-vidas em cada dia.
           </p>
-          {/* Exemplo de como percorrer o log: */}
+          
           <div className="space-y-4">
             {lifeguards.sort((a,b) => a.rank - b.rank).map(lg => (
               <div key={lg.id}>

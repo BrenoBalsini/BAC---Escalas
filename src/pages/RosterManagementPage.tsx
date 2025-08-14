@@ -3,9 +3,10 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { type Lifeguard } from "../types/Lifeguard";
 import { type BeachPost } from "../types/BeachPost";
 import * as Button from "../components/ui/Button";
-import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
+import { FaPlus, FaTrash} from "react-icons/fa";
 import AddLifeguardModal from "../components/modals/AddLifeguardModal";
 import EditLifeguardModal from "../components/modals/EditLifeguardModal";
+import { FaPencil } from "react-icons/fa6";
 
 export default function RosterManagementPage() {
 	const [lifeguards, setLifeguards] = useLocalStorage<Lifeguard[]>(
@@ -49,7 +50,7 @@ export default function RosterManagementPage() {
 		const newLifeguard: Lifeguard = {
 			...newLifeguardData,
 			id: crypto.randomUUID(),
-			group: "G2", // Default to G2, will be recalculated
+			group: "G2",
 		};
 
 		const newList = [...lifeguards, newLifeguard].sort(
@@ -222,21 +223,19 @@ export default function RosterManagementPage() {
 									</select>
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-									<div className="flex justify-center gap-2">
-										<Button.ButtonComponent
-											
-											variant="secondary"
+									<div className="flex justify-center gap-4">
+										<button
 											onClick={() => setEditingLifeguard(lg)}
+											className="text-gray-600 hover:text-gray-900"
 										>
-											<Button.Icon icon={FaEdit} />
-										</Button.ButtonComponent>
-										<Button.ButtonComponent
-											
-											variant="danger"
+											<FaPencil />
+										</button>
+										<button
 											onClick={() => handleDeleteLifeguard(lg.id)}
+											className="text-red-600 hover:text-red-900"
 										>
-											<Button.Icon icon={FaTrash} />
-										</Button.ButtonComponent>
+											<FaTrash/>
+										</button>
 									</div>
 								</td>
 							</tr>

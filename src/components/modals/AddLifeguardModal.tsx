@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import type { Lifeguard } from "../../types/Lifeguard";
-import * as Button from "../ui/Button"; // Usando nosso componente de botão
+import * as Button from "../ui/Button"; 
 import { FaTimes } from "react-icons/fa";
 
-// Definindo as propriedades que o modal receberá
+
 type AddLifeguardModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -25,7 +25,7 @@ const AddLifeguardModal: React.FC<AddLifeguardModalProps> = ({
   const [name, setName] = useState("");
   const [rank, setRank] = useState(nextRank);
 
-  // Atualiza o rank no formulário se o nextRank mudar (após adicionar um GVC)
+  
   React.useEffect(() => {
     setRank(nextRank);
   }, [nextRank]);
@@ -41,7 +41,7 @@ const AddLifeguardModal: React.FC<AddLifeguardModalProps> = ({
       return;
     }
     onAddLifeguard({ name, rank });
-    // Limpa o nome para o próximo cadastro e mantém o modal aberto
+    
     setName("");
   };
 
@@ -93,7 +93,7 @@ const AddLifeguardModal: React.FC<AddLifeguardModalProps> = ({
                 value={rank}
                 onChange={(e) => setRank(Number(e.target.value))}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-100"
-                readOnly // O Rank é automático
+                readOnly 
               />
             </div>
           </div>
