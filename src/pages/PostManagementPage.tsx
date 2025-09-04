@@ -6,7 +6,7 @@ import { AddPostModal } from "../components/modals/AddPostModal";
 import { FaTrash, FaPencilAlt, FaPlus } from "react-icons/fa";
 
 export default function PostManagementPage() {
-  const [posts, setPosts] = useLocalStorage<BeachPost[]>("posts", []);
+  const [posts, setPosts] = useLocalStorage<BeachPost[]>("bac-posts", []);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [editingPost, setEditingPost] = useState<BeachPost | null>(null);
