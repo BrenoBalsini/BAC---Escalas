@@ -7,14 +7,13 @@ import { type EditContext } from "../types/EditContext";
 import EditShiftModal from "../components/modals/EditShiftModal";
 import LogViewerModal from "../components/modals/LogViewModal";
 import * as Button from "../components/ui/Button";
-import { FaArrowLeft, FaCopy, FaGift, FaList } from "react-icons/fa6";
+import { FaArrowLeft, FaCopy, FaList, FaRepeat  } from "react-icons/fa6";
 import TriangulationModal, {
   type TriangulationOpportunity,
 } from "../components/modals/TriangulationModal";
 import DonorSelectionModal from "../components/modals/DonorSelectionModal";
 
 import SecondaryDonorSelectionModal from "../components/modals/SecondaryDonorSelectionModal";
-import { FaUsers } from "react-icons/fa"; // Ícone para a nova triangulação
 
 export default function ScheduleViewerPage() {
   const { scheduleId } = useParams<{ scheduleId: string }>();
@@ -791,8 +790,8 @@ export default function ScheduleViewerPage() {
                                     const workingPost = snapshotPosts.find(
                                       (p) => p.id === workingPostId
                                     );
-                                    cellContent = `P${
-                                      workingPost?.order || "?"
+                                    cellContent = `XP${
+                                      workingPost?.name.replace("Posto ", "") || "?"
                                     }`;
                                     bgClass = "bg-blue-100";
                                   }
@@ -807,9 +806,9 @@ export default function ScheduleViewerPage() {
                                         lifeguard.preferenceA_id
                                       )
                                     ) {
-                                      bgClass = "bg-orange-200";
+                                      bgClass = "bg-green-200";
                                     } else {
-                                      bgClass = "bg-yellow-200";
+                                      bgClass = "bg-orange-100";
                                       toolTipText =
                                         "Possível troca com outros postos";
                                     }
@@ -860,9 +859,9 @@ export default function ScheduleViewerPage() {
                                             handleOpenTriangulation(lifeguard)
                                           }
                                         >
-                                          <FaGift
+                                          <FaRepeat
                                             className="text-green-600 hover:text-green-800 cursor-pointer"
-                                            title="Otimizar Escala (Doador A disponível no posto)"
+                                            title="Otimizar Escala (Doador disponível no posto)"
                                           />
                                         </button>
                                       )}
@@ -874,9 +873,9 @@ export default function ScheduleViewerPage() {
                                             )
                                           }
                                         >
-                                          <FaUsers
+                                          <FaRepeat
                                             className="text-yellow-600 hover:text-yellow-800 cursor-pointer"
-                                            title="Otimizar Escala (Doador B disponível em outro posto)"
+                                            title="Otimizar Escala (Doador disponível em outro posto)"
                                           />
                                         </button>
                                       )}

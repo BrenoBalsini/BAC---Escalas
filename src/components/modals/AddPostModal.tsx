@@ -1,31 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import type { BeachPost } from '../../types/BeachPost';
-import * as Button from '../ui/Button';
-import { FaTimes } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import type { BeachPost } from "../../types/BeachPost";
+import * as Button from "../ui/Button";
+import { FaTimes } from "react-icons/fa";
 
 type AddPostModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (postData: Omit<BeachPost, 'id'>) => void;
-  
-  editablePost?: BeachPost | null; 
+  onSave: (postData: Omit<BeachPost, "id">) => void;
+
+  editablePost?: BeachPost | null;
+  posts: BeachPost[];
 };
 
-export const AddPostModal: React.FC<AddPostModalProps> = ({ isOpen, onClose, onSave, editablePost }) => {
-  const [name, setName] = useState('');
+export const AddPostModal: React.FC<AddPostModalProps> = ({
+  isOpen,
+  onClose,
+  onSave,
+  editablePost,
+  posts,
+}) => {
+  const [name, setName] = useState("");
   const [order, setOrder] = useState(1);
+  const [orderError, setOrderError] = useState<string | null>(null);
 
-  
   useEffect(() => {
     if (editablePost) {
       setName(editablePost.name);
       setOrder(editablePost.order);
     } else {
-      
-      setName('');
-      setOrder(1);
+      setName("");
+      const maxOrder =
+        posts.length > 0 ? Math.max(...posts.map((p) => p.order)) : 0;
+      setOrder(maxOrder + 1);
     }
-  }, [editablePost, isOpen]);
+    setOrderError(null);
+
+  }, [editablePost, isOpen, posts]);
 
   if (!isOpen) {
     return null;
@@ -34,28 +44,51 @@ export const AddPostModal: React.FC<AddPostModalProps> = ({ isOpen, onClose, onS
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      alert('O nome do posto é obrigatório.');
+      alert("O nome do posto é obrigatório.");
       return;
     }
+
+    const ordemDuplicada = posts.some(
+      (p) => p.order === order && (!editablePost || p.id !== editablePost.id)
+    );
+
+    if (ordemDuplicada) {
+      setOrderError("Já existe um posto com essa ordem. Escolha outro número.");
+      return;
+    } else {
+      setOrderError(null);
+    }
+
     onSave({ name, order });
-    onClose(); 
+    onClose();
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center" aria-modal="true">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center"
+      aria-modal="true"
+    >
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md m-4">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-bold text-gray-800">
-            {editablePost ? 'Editar Posto' : 'Adicionar Novo Posto'}
+            {editablePost ? "Editar Posto" : "Adicionar Novo Posto"}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-700">
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-700"
+          >
             <FaTimes />
           </button>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="p-6 space-y-4">
             <div>
-              <label htmlFor="post-name" className="block text-sm font-medium text-gray-700">Nome do Posto</label>
+              <label
+                htmlFor="post-name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Nome do Posto
+              </label>
               <input
                 type="text"
                 id="post-name"
@@ -66,26 +99,40 @@ export const AddPostModal: React.FC<AddPostModalProps> = ({ isOpen, onClose, onS
               />
             </div>
             <div>
-              <label htmlFor="post-order" className="block text-sm font-medium text-gray-700">Ordem</label>
+              <label
+                htmlFor="post-order"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Ordem
+              </label>
               <input
                 type="number"
                 id="post-order"
                 value={order}
                 onChange={(e) => setOrder(Number(e.target.value))}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+                className={`mt-1 block w-full p-2 border rounded-md shadow-sm ${
+                  orderError ? "border-red-500" : "border-gray-300"
+                }`}
               />
+              {orderError && (
+                <p className="text-red-600 text-sm mt-1">{orderError}</p>
+              )}
             </div>
           </div>
           <div className="flex justify-end items-center p-4 bg-gray-50 border-t rounded-b-lg gap-2">
             <Button.Root>
-                <Button.ButtonComponent variant="secondary" onClick={onClose} type="button">
-                    Cancelar
-                </Button.ButtonComponent>
+              <Button.ButtonComponent
+                variant="secondary"
+                onClick={onClose}
+                type="button"
+              >
+                Cancelar
+              </Button.ButtonComponent>
             </Button.Root>
             <Button.Root>
-                <Button.ButtonComponent type="submit">
-                    Salvar
-                </Button.ButtonComponent>
+              <Button.ButtonComponent type="submit">
+                Salvar
+              </Button.ButtonComponent>
             </Button.Root>
           </div>
         </form>

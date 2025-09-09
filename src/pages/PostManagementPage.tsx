@@ -115,6 +115,7 @@ export default function PostManagementPage() {
         onClose={() => setIsModalOpen(false)}
         onSave={handleSavePost}
         editablePost={editingPost}
+        posts={posts}
       />
       </div>
 

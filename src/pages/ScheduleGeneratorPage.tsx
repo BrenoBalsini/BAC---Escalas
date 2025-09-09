@@ -73,7 +73,18 @@ export default function ScheduleGeneratorPage() {
 
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
 
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStepRaw] = useState(() => {
+    return Number(localStorage.getItem("bac-schedule-generator-step")) || 1;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("bac-schedule-generator-step", String(currentStep));
+  }, [currentStep]);
+
+  const setCurrentStep = (step: number) => {
+    setCurrentStepRaw(step);
+  };
+
 
   useEffect(() => {
     setSavedState({
@@ -269,7 +280,7 @@ export default function ScheduleGeneratorPage() {
   };
 
   const goToPreviousStep = () => {
-    setCurrentStep((prev) => (prev > 1 ? prev - 1 : prev));
+    setCurrentStep(currentStep - 1);
   };
 
   const lifeguardsByPost = useMemo(() => {
@@ -388,11 +399,11 @@ export default function ScheduleGeneratorPage() {
               2. Folgas Solicitadas
             </h2>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-[500px]">
               <table className="min-w-full">
-                <thead className="sticky top-0 bg-white z-20">
+                <thead>
                   <tr>
-                    <th className="sticky left-0 bg-white z-30 px-2 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="sticky left-0 top-0 bg-white z-30 px-2 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Nome
                     </th>
                     {days.map((day) => {
@@ -407,7 +418,7 @@ export default function ScheduleGeneratorPage() {
                       return (
                         <th
                           key={day}
-                          className="px-2 sm:px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                          className="sticky top-0 bg-white z-20 px-2 sm:px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider"
                         >
                           <span>{dayOfWeek}</span>
                           <span className="block">{dayOfMonth}</span>
@@ -846,7 +857,7 @@ export default function ScheduleGeneratorPage() {
                                         (p) => p.id === workingPostId
                                       );
                                       cellContent = `XP${
-                                        workingPost?.order || "?"
+                                        workingPost?.name.replace("Posto ", "") || "?"
                                       }`;
                                       bgClass = "bg-blue-100";
                                     }
